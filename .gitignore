@@ -1,0 +1,16 @@
+.DS_Store
+dist
+*/dist/*
+wp-content/themes/.*/dist/
+node_modules
+npm-debug.log
+*.sass-cache*
+*.log
+.idea/
+*.swp
+packaged/
+wpcs/
+wp-config.php
+wp-migrate-db-pro-compatibility.php
+wp-content/uploads/wp-migrate-db
+wp-content/uploads
