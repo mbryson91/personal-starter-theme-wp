@@ -44,11 +44,12 @@ gulp.task('sass', function () {
 
 
 gulp.task('js', function () {
-  return gulp.src(['node_modules/babel-polyfill/dist/polyfill.js','src/js/*.js'])
+  return gulp.src(['node_modules/babel-polyfill/dist/polyfill.js','src/js/**/*.js', '!src/js/**/_*.js'])
     //.pipe(plumber())
     .pipe(gulpif(development,sourcemaps.init()))
     .pipe(babel())
     .pipe(gulpif(production,uglify()))
+    // .pipe(rename({ suffix: '.min' }))
     .pipe(gulpif(development,sourcemaps.write(".")))
     .pipe(gulp.dest('dist/js'))
     .pipe(gulpif(enableBS,browserSync.reload({
