@@ -1,7 +1,8 @@
 .DS_Store
 dist
 */dist/*
-wp-content/themes/.*/dist/
+wp-content/themes/**/dist/
+wp-content/themes/**/package-lock.json
 node_modules
 npm-debug.log
 *.sass-cache*
