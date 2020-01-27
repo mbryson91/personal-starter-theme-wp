@@ -14,12 +14,15 @@ var colors = require('ansi-colors');
 var clean = require('gulp-clean-css');
 var argv = require('yargs').argv;
 var gulpif = require('gulp-if');
+// const webpack = require('webpack-stream');
+var browserify = require('gulp-browserify');
+
 //project variables
 var url = 'https://newsite.test', //the url of your local build, for BrowserSync
     dist = 'dist',
     production = argv.production,
     development = !argv.production,
-    enableBS = false; //manually disbale BrowserSync if its acting up
+    enableBS = true; //manually disbale BrowserSync if its acting up
 
 if(argv.production) {
   enableBS = false;
@@ -46,6 +49,22 @@ gulp.task('sass', function () {
 gulp.task('js', function () {
   return gulp.src(['node_modules/babel-polyfill/dist/polyfill.js','src/js/**/*.js', '!src/js/**/_*.js'])
     //.pipe(plumber())
+    .pipe(browserify({
+      insertGlobals : true,
+      debug : development
+    }))
+
+    // .pipe(webpack({
+    //   // Any configuration options...
+    //   watch: true,
+    //   mode: 'development',
+    //   entry: {
+    //     app: './src/js/app.js',
+    //   },
+    //   output: {
+    //     filename: './dist/js/[name].js',
+    //   },
+    // }))
     .pipe(gulpif(development,sourcemaps.init()))
     .pipe(babel())
     .pipe(gulpif(production,uglify()))
