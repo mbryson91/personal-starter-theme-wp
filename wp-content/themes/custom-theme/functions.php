@@ -44,7 +44,8 @@ if ( ! function_exists( 'custom_theme_setup' ) ) :
 
 		// This theme uses wp_nav_menu() in one location.
 		register_nav_menus( array(
-			'menu-1' => esc_html__( 'Primary', 'custom-theme' ),
+			'menu-1' => esc_html__( 'Menu 1', 'custom-theme' ),
+			'primary' => esc_html__( 'Primary', 'custom-theme' ),
 		) );
 
 		/*
@@ -166,3 +167,11 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 if ( class_exists( 'WooCommerce' ) ) {
 	require get_template_directory() . '/inc/woocommerce.php';
 }
+
+/**
+ * Register Custom Navigation Walker
+ */
+function register_navwalker(){
+	require_once get_template_directory() . '/inc/class-bootstrap-walker.php';
+}
+add_action( 'after_setup_theme', 'register_navwalker' );
