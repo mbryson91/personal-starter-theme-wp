@@ -9,18 +9,18 @@
 
 ?>
 
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="entry-header">
+<article id="post-<?php the_ID(); ?>" class="container">
+	<header class="entry-header row">
 		<?php
 		if ( is_singular() ) :
-			the_title( '<h1 class="entry-title">', '</h1>' );
+			the_title( '<h1 class="entry-title col-sm-12">', '</h1>' );
 		else :
-			the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
+			the_title( '<h2 class="entry-title col-sm-12"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
 		endif;
 
 		if ( 'post' === get_post_type() ) :
 			?>
-			<div class="entry-meta">
+			<div class="entry-meta col-sm-12">
 				<?php
 				custom_theme_posted_on();
 				custom_theme_posted_by();
@@ -31,7 +31,8 @@
 
 	<?php custom_theme_post_thumbnail(); ?>
 
-	<div class="entry-content">
+	<div class="entry-content row">
+		<div class="col-sm-8">
 		<?php
 		the_content( sprintf(
 			wp_kses(
@@ -51,9 +52,13 @@
 			'after'  => '</div>',
 		) );
 		?>
+		</div>
+		<div class="col-sm-4">
+			<?php get_sidebar(); ?>
+		</div>
 	</div><!-- .entry-content -->
 
-	<footer class="entry-footer">
+	<footer class="entry-footer container">
 		<?php custom_theme_entry_footer(); ?>
 	</footer><!-- .entry-footer -->
 </article><!-- #post-<?php the_ID(); ?> -->

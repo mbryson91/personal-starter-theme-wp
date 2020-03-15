@@ -12,6 +12,8 @@ require('bootstrap/js/dist/tab');
 require('bootstrap/js/dist/toast');
 require('bootstrap/js/dist/tooltip');
 require('bootstrap/js/dist/util');
+// require('./defaults/customizer');
+// require('./defaults/navigation.js');
 
 $(function () {
     'use strict'

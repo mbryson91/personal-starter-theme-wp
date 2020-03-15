@@ -10,11 +10,11 @@
 ?>
 
 <section class="no-results not-found">
-	<header class="page-header">
+	<header class="page-header container">
 		<h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'custom-theme' ); ?></h1>
 	</header><!-- .page-header -->
 
-	<div class="page-content">
+	<div class="page-content container">
 		<?php
 		if ( is_home() && current_user_can( 'publish_posts' ) ) :
 

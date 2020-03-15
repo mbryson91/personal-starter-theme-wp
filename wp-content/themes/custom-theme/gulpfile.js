@@ -15,7 +15,10 @@ var clean = require('gulp-clean-css');
 var argv = require('yargs').argv;
 var gulpif = require('gulp-if');
 // const webpack = require('webpack-stream');
-var browserify = require('gulp-browserify');
+var browserify =  require('browserify');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+// var through = require('through');
 
 //project variables
 var url = 'https://newsite.test', //the url of your local build, for BrowserSync
@@ -46,35 +49,54 @@ gulp.task('sass', function () {
 });
 
 
-gulp.task('js', function () {
-  return gulp.src(['node_modules/babel-polyfill/dist/polyfill.js','src/js/**/*.js', '!src/js/**/_*.js'])
-    //.pipe(plumber())
-    .pipe(browserify({
-      insertGlobals : true,
-      debug : development
-    }))
+gulp.task("js", function (done) {
+  [
+    //structure is src root, relative path, filename, dist root
+    ["./src/", "js/", "app", "./dist/"],
+    ["./src/", "js/defaults/", "customizer", "./dist/"],
+  ].forEach(function (entry, i, entries) {
+    // Count remaining bundling operations to track
+    // when to call done(). Could alternatively use
+    // merge-stream and return its output.
+    entries.remaining = entries.remaining || entries.length;
 
-    // .pipe(webpack({
-    //   // Any configuration options...
-    //   watch: true,
-    //   mode: 'development',
-    //   entry: {
-    //     app: './src/js/app.js',
-    //   },
-    //   output: {
-    //     filename: './dist/js/[name].js',
-    //   },
-    // }))
-    .pipe(gulpif(development,sourcemaps.init()))
-    .pipe(babel())
-    .pipe(gulpif(production,uglify()))
-    // .pipe(rename({ suffix: '.min' }))
-    .pipe(gulpif(development,sourcemaps.write(".")))
-    .pipe(gulp.dest('dist/js'))
-    .pipe(gulpif(enableBS,browserSync.reload({
-      stream: true
-    })))
+    let bundleStream = browserify(entry[0] + entry[1] + entry[2] + '.js').bundle();
+      // If you need to use gulp plugins after bundling then you can
+      // pipe to vinyl-source-stream then gulp.dest() here instead
+      bundleStream
+      .pipe(source(entry[2]+'.js'))
+      .pipe(buffer())
+      .pipe(babel())
+      .pipe(gulpif(production,uglify()))
+      .pipe(gulp.dest(entry[3] + entry[1]));
+      console.log('looping foreach: file- ' + entry[0] + entry[1] + entry[2] + '.js');
+  });
 });
+
+// gulp.task('js', function () {
+//   var b = browserify({
+//     entries: [
+//       'node_modules/babel-polyfill/dist/polyfill.js',
+//       'src/js/app.js'], // Only need initial file, browserify finds the deps
+//     debug: true        // Enable sourcemaps
+//   });
+
+//   return b.bundle()
+//     // .pipe(source('src/js/app.js')) // destination file for browserify, relative to gulp.dest
+//     // .pipe(buffer())
+//     .pipe(babel())
+//     .pipe(gulpif(production,uglify()))
+//     .pipe(gulp.dest('./dist/js/'));
+
+//   // return gulp.src(['node_modules/babel-polyfill/dist/polyfill.js','./src/js/*.js'])
+//   //   // .pipe(browserified)
+//   //   .pipe(babel())
+//   //   .pipe(gulpif(production,uglify()))
+//   //   .pipe(gulp.dest('dist/js/'))
+//   //   .pipe(gulpif(enableBS,browserSync.reload({
+//   //     stream: true
+//   //   })));
+// });
 
 gulp.task('images', function () {
   return gulp.src('src/images/**/*.+(png|jpg|jpeg|gif|svg)')
@@ -112,10 +134,10 @@ gulp.task('watch', function () {
   gulp.watch('src/scss/**/*.scss', gulp.parallel('sass'))
     .on('change', path => log('File ' + colors.bold(colors.magenta(path)) + ' changed.'))
     .on('unlink', path => log('File ' + colors.bold(colors.magenta(path)) + ' was removed.'));
-  gulp.watch('**/*.php', gulp.series(browserSync.reload))
+    gulp.watch('src/js/**/*.js', gulp.series('js'))
     .on('change', path => log('File ' + colors.bold(colors.magenta(path)) + ' changed.'))
     .on('unlink', path => log('File ' + colors.bold(colors.magenta(path)) + ' was removed.'));
-  gulp.watch('src/js/**/*.js', gulp.series('js'))
+    gulp.watch('**/*.php', gulp.series(browserSync.reload))
     .on('change', path => log('File ' + colors.bold(colors.magenta(path)) + ' changed.'))
     .on('unlink', path => log('File ' + colors.bold(colors.magenta(path)) + ' was removed.'));
 

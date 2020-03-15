@@ -21,30 +21,12 @@
 </head>
 
 <body <?php body_class(); ?>>
-<div id="page" class="site">
-	<a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'custom-theme' ); ?></a>
-
-	<header id="masthead" class="site-header">
-		<div class="site-branding">
-			<?php
-			the_custom_logo();
-			if ( is_front_page() && is_home() ) :
-				?>
-				<h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-				<?php
-			else :
-				?>
-				<p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p>
-				<?php
-			endif;
-			$custom_theme_description = get_bloginfo( 'description', 'display' );
-			if ( $custom_theme_description || is_customize_preview() ) :
-				?>
-				<p class="site-description"><?php echo $custom_theme_description; /* WPCS: xss ok. */ ?></p>
-			<?php endif; ?>
+<div id="page" class="site ">
+	<header id="masthead" class="site-header container">
+		<div class="site-branding row">
 		</div><!-- .site-branding -->
 
-		<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" role="navigation">
+		<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark row" role="navigation">
 			<div class="container">
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-controls="bs-example-navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation">
